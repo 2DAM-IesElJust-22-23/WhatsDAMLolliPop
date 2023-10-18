@@ -13,8 +13,8 @@ import com.example.whatsdamlolipop.databinding.ActivityMessageWindowsBinding
  */
 class MessageWindowsActivity : AppCompatActivity() {
 
+    // Vista de enlace para la actividad.
     private lateinit var binding: ActivityMessageWindowsBinding
-    private lateinit var adapter: AdaptadorRecycler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,15 +27,13 @@ class MessageWindowsActivity : AppCompatActivity() {
         val message = binding.MessageText
         val textV = binding.connectionInfoTextView
         val sendM = binding.sendMessage
-        val recyclerView = binding.MessagesRecyclerView
 
         // Configurar el administrador de diseño del RecyclerView.
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.MessagesRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.MessagesRecyclerView.setHasFixedSize(true)
 
-        // Crear y configurar el adaptador para el RecyclerView.
-        adapter = AdaptadorRecycler(llistaMissatges)
-        recyclerView.adapter = adapter
-        recyclerView.setHasFixedSize(true)
+        // Establecer el adaptador para el RecyclerView y proporcionar la lista de mensajes.
+        binding.MessagesRecyclerView.adapter = AdaptadorRecycler(llistaMissatges)
 
         // Obtener el nombre de usuario y la dirección del servidor desde la actividad anterior.
         val nickname = intent.getStringExtra("NICKNAME_KEY")
@@ -53,7 +51,7 @@ class MessageWindowsActivity : AppCompatActivity() {
             binding.MessagesRecyclerView.adapter?.notifyItemInserted(llistaMissatges.size - 1)
 
             // Desplazar el RecyclerView al último mensaje.
-            recyclerView.scrollToPosition(llistaMissatges.size - 1)
+            binding.MessagesRecyclerView.scrollToPosition(llistaMissatges.size - 1)
 
             // Limpiar el campo de texto del mensaje.
             message.text.clear()
