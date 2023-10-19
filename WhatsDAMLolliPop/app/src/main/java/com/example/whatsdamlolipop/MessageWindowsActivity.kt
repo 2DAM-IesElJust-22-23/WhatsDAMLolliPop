@@ -1,8 +1,10 @@
 package com.example.whatsdamlolipop
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+
 import com.example.whatsdamlolipop.databinding.ActivityMessageWindowsBinding
 
 /**
@@ -30,7 +32,6 @@ class MessageWindowsActivity : AppCompatActivity() {
 
         // Configurar el administrador de diseño del RecyclerView.
         binding.MessagesRecyclerView.layoutManager = LinearLayoutManager(this)
-        binding.MessagesRecyclerView.setHasFixedSize(true)
 
         // Establecer el adaptador para el RecyclerView y proporcionar la lista de mensajes.
         binding.MessagesRecyclerView.adapter = AdaptadorRecycler(llistaMissatges)
@@ -44,17 +45,21 @@ class MessageWindowsActivity : AppCompatActivity() {
 
         // Manejar el clic en el botón de enviar mensaje.
         sendM.setOnClickListener {
-            // Agregar el mensaje a la lista de mensajes.
-            llistaMissatges.add(Missatge(nickname.toString(), message.text.toString()))
+            if (message.text.isNotEmpty()){
+                // Agregar el mensaje a la lista de mensajes.
+                llistaMissatges.add(Missatge(nickname.toString(), message.text.toString()))
 
-            // Notificar al adaptador que se ha insertado un nuevo elemento.
-            binding.MessagesRecyclerView.adapter?.notifyItemInserted(llistaMissatges.size - 1)
+                // Notificar al adaptador que se ha insertado un nuevo elemento.
+                binding.MessagesRecyclerView.adapter?.notifyItemInserted(llistaMissatges.size - 1)
 
-            // Desplazar el RecyclerView al último mensaje.
-            binding.MessagesRecyclerView.scrollToPosition(llistaMissatges.size - 1)
+                // Desplazar el RecyclerView al último mensaje.
+                binding.MessagesRecyclerView.scrollToPosition(llistaMissatges.size - 1)
 
-            // Limpiar el campo de texto del mensaje.
-            message.text.clear()
+                // Limpiar el campo de texto del mensaje.
+                message.text.clear()
+
+            }
+
         }
     }
 }
