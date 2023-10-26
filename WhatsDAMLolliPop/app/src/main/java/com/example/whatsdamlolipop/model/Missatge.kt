@@ -1,4 +1,6 @@
-package com.example.whatsdamlolipop
+package com.example.whatsdamlolipop.model
+
+import java.io.Serializable
 
 /**
  * Data class Missatge
@@ -8,7 +10,4 @@ package com.example.whatsdamlolipop
  * @property nom El nombre del remitente del mensaje.
  * @property text El texto del mensaje.
  */
-data class Missatge(var nom: String, var text: String)
-
-// Variable para almacenar la lista de mensajes
-var llistaMissatges = mutableListOf<Missatge>()
+data class Missatge(var nom: String, var text: String):Serializable

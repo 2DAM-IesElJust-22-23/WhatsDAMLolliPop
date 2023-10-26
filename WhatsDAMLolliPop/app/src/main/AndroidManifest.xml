@@ -13,10 +13,10 @@
         android:theme="@style/Theme.WhatsDamLoliPop"
         tools:targetApi="31">
         <activity
-            android:name=".MessageWindowsActivity"
+            android:name=".vista.ui.MessageWindowsActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".vista.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,7 +1,9 @@
-package com.example.whatsdamlolipop
+package com.example.whatsdamlolipop.viewModel
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.whatsdamlolipop.R
+import com.example.whatsdamlolipop.model.Missatge
 import java.text.SimpleDateFormat
 import java.util.Date
 

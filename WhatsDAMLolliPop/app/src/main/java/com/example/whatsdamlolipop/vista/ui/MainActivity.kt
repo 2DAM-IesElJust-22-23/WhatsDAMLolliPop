@@ -1,5 +1,5 @@
 
-package com.example.whatsdamlolipop
+package com.example.whatsdamlolipop.vista.ui
 
 import android.content.Intent
 import android.net.InetAddresses

@@ -1,8 +1,10 @@
-package com.example.whatsdamlolipop
+package com.example.whatsdamlolipop.viewModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-
+import com.example.whatsdamlolipop.R
+import com.example.whatsdamlolipop.model.Missatge
+import com.example.whatsdamlolipop.repository.MissatgeRepository
 
 /**
  * Clase AdaptadorRecycler
@@ -12,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * @param llistaMissatges La lista de mensajes que se mostrará en el RecyclerView.
  */
-class AdaptadorRecycler(var llistaMissatges: List<Missatge>) : RecyclerView.Adapter<MissatgeViewHolder>() {
+class AdaptadorMissatges(var llistaMissatges: List<Missatge>) : RecyclerView.Adapter<MissatgeViewHolder>() {
     /**
      * Crea un nuevo ViewHolder cuando se necesita.
      *
@@ -27,22 +29,24 @@ class AdaptadorRecycler(var llistaMissatges: List<Missatge>) : RecyclerView.Adap
     }
 
     /**
-     * Vincula (bind) los datos del mensaje en una posición específica con un ViewHolder.
+     * Modifica el adaptador para acceder a través del repositorio a los mensajes.
      *
-     * @param holder El MissatgeViewHolder que se utilizará para mostrar los datos.
+     * @param holder El ViewHolder en el que se mostrará el mensaje.
      * @param position La posición del mensaje en la lista.
      */
     override fun onBindViewHolder(holder: MissatgeViewHolder, position: Int) {
-        val missatge = llistaMissatges[position]
-        holder.bind(missatge)
+        (holder as MissatgeViewHolder).bind(
+            MissatgeRepository.getInstance().getLlistaMissatges()[position]
+        )
+
     }
 
     /**
-     * Obtiene el número total de elementos en la lista.
+     * Obtiene el número total de mensajes en el repositorio.
      *
-     * @return El número de elementos en la lista de mensajes.
+     * @return El número total de mensajes.
      */
     override fun getItemCount(): Int {
-        return llistaMissatges.size
+        return MissatgeRepository.getInstance().getNumMissatges()
     }
 }
