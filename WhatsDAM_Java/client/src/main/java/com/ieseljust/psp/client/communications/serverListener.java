@@ -22,72 +22,55 @@ import org.json.JSONArray;
 
 public class serverListener implements Runnable {
 
+    /*
+     * Aquesta classe s'encarrega de gestionar els broadcasts que fa el servidor
+     * cap als clients subscrits a les seues publicacions.
+     * Implementarà doncs un servei que escoltarà en un port aleatori el que
+     * li envia el servidor de missatgeria i ho processarà de forma adeqüada.
+     * 
+     */
+
     ViewModel vm;
 
     public serverListener(ViewModel vm) {
         this.vm = vm;
     }
 
-    int listenerPort = CurrentConfig.getListenPort();
+    int listenerPort = CurrentConfig.listenPort();
 
     @Override
     public void run() {
-        // 1. Crear un socket de tipo servidor que escuche por el puerto de recepción de mensajes
+        // 1. Crear un socket de tipus servidor que escolte pel port de recepció de
+        // missatges
         ServerSocket listener = null;
         try {
-            // Creamos el socket en un puerto determinado por el sistema
-            // y lo guardamos en listenPort.
+            // Creem el socket en un  port determinat pel sistema
+            // i el guardem a listenPort.
             listener = new ServerSocket(0);
-            CurrentConfig.setListenPort(listener.getLocalPort());
+            CurrentConfig.setlistenPort(listener.getLocalPort());
+            
+
         } catch (IOException e) {
-            System.out.println("El puerto " + listenerPort + " está ocupado o es inaccesible.");
+            System.out.println("El port " + listenerPort + " està ocupato és inaccessible.");
             return;
         }
 
         // TO-DO
-        // 2. Iniciamos un bucle infinito a la espera de recibir conexiones
-        // Cuando llegue una conexión, la procesaremos de manera adecuada
-        // Las peticiones que podemos recibir serán de tipo:
+        // 2. Iniciem un bucle infinit a l'espera de rebre connexions
+        // Quan arribe una connexió la processrem de manera adeqüada
+        // Les peticions que podme rebre seran de tipus:
+        
+        // {"type": "userlist", "content": [Llista d'usuaris]}, amb un JSONArray amb la llista d'usuaris.
+        // {"type": "message", "user":"usuari", "content": "Contingut del missatge" }
+        
+        // És interessant implementar un mètode a banda per processat aquestes línies
+        // però no cal que creem un fil a propòsit per atendre cada missatge, ja que
+        // no som un servidor com a tal, i el que estem fent aci, és mantindre un 
+        // canal de recepció només amb el servidor.
 
-        // {"type": "userlist", "content": [Lista de usuarios]}, con un JSONArray con la lista de usuarios.
-        // {"type": "message", "user":"usuario", "content": "Contenido del mensaje" }
-
-        // Es interesante implementar un método aparte para procesar estas líneas
-        // pero no es necesario crear un hilo adicional para atender cada mensaje, ya que
-        // no somos un servidor como tal, y lo que estamos haciendo aquí es mantener un
-        // canal de recepción solo con el servidor.
-
-        while (true) {
-            try {
-                Socket socket = listener.accept();
-                processRequest(socket);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        
+        
+        
     }
 
-    private void processRequest(Socket socket) {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String request = reader.readLine();
-
-            JSONObject jsonRequest = new JSONObject(request);
-
-            String type = jsonRequest.getString("type");
-
-            if ("userlist".equals(type)) {
-                JSONArray userList = jsonRequest.getJSONArray("content");
-                // Procesa la lista de usuarios (userList) como desees
-            } else if ("message".equals(type)) {
-                String user = jsonRequest.getString("user");
-                String content = jsonRequest.getString("content");
-                // Procesa el mensaje recibido (user y content) como desees
-            }
-
-            socket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

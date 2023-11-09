@@ -17,57 +17,39 @@ import org.json.JSONObject;
 
 public class communicationManager {
 
+    /* Aquesta classe s'encarrega de la gestió de la
+     comunicació amb el servidor.
+     */
+    
     public static JSONObject sendServer(String msg) {
-        try {
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(CurrentConfig.getServerAddress(), CurrentConfig.getServerPort()));
 
-            // Envia el missatge al servidor
-            OutputStream outputStream = socket.getOutputStream();
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream));
-            out.println(msg);
-            out.flush();
+        // TO-DO:
+        // Envía al servidor l'string msg
+        // I retorna un JSON amb la resposta
 
-            // Rep la resposta del servidor
-            InputStream inputStream = socket.getInputStream();
-            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-            String response = in.readLine();
-
-            // Tanca la connexió
-            socket.close();
-
-            // Parsa la resposta JSON
-            return new JSONObject(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Maneja errors de connexió o JSON
-            return null;
-        }
+        
     }
 
     public static void connect() throws JSONException, communicationManagerException {
-        try {
-            JSONObject registerData = new JSONObject();
-            registerData.put("command", "register");
-            registerData.put("user", CurrentConfig.getUsername());
-            registerData.put("listenPort", CurrentConfig.getListenPort());
 
-            // Envia el missatge de registre al servidor
-            sendServer(registerData.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Maneja errors de connexió o JSON
-            throw new communicationManagerException("Error durant el registre");
-        }
+        // TO-DO:
+
+        // Creem un misstge pe al servidor amb l'ordre (command) register, 
+        // el nom d'usuari (user) i el port (listenPost) pel qual el client escoltarà 
+        // les notificacions (el tenim a CurrentConfig.listenPort())
+
+        // Enviarà el missatge al servidor a través de sendServer.
+
+        // Si es produeix un error, llançarà una excepció i aturarà
+        // l'aplicaió (per exemple, si l'usuari ja existeix al servidor)
+        // Teniu per a això l'excepció communicationManagerException 
+        // com a excepció personalitzada al projecte. 
+        
+
+
     }
 
-    public static void sendMessage(Message m) {
-        // Implementa l'enviament d'un missatge al servidor
-    }
-
-    public static class communicationManagerException extends Exception {
-        public communicationManagerException(String message) {
-            super(message);
-        }
-    }
+    public static void sendMessage(Message m){
+        // Envia un misstge al servidor (es fa amb una línia!)
+    }    
 }

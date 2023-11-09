@@ -16,6 +16,10 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
 public class itemView<T> extends ListCell<Message> {
+// Aquesta classe representa la implementació
+// gràfica d'un missatge per afegir al ListView 
+// de missatges.
+
     @FXML
     private Label user;
 
@@ -36,7 +40,8 @@ public class itemView<T> extends ListCell<Message> {
             loader.setController(this);
             loader.setRoot(this);
             loader.load();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -45,20 +50,21 @@ public class itemView<T> extends ListCell<Message> {
     protected void updateItem(Message item, boolean empty) {
         super.updateItem(item, empty);
 
-        if (empty || item == null) {
+        if(empty || item == null) {
             setText(null);
             setContentDisplay(ContentDisplay.TEXT_ONLY);
-        } else {
+        }
+        else {
             content.setText(item.getContent());
             user.setText(item.getUser());
-
-            // Si el mensaje es del propio usuario, píntalo de verde
-            System.out.println(CurrentConfig.getUsername());
-            if (item.getUser().equals(CurrentConfig.getUsername())) {
+            
+            // Si el missatge és del propi usuari, el pinta de verd
+            System.out.println(CurrentConfig.username());
+            if (item.getUser().equals(CurrentConfig.username())) {
                 bubble.setStyle("-fx-background-color: #dcf8c6; -fx-border-color:c7c1ba; -fx-border-radius:3");
                 bubbleContainer.setStyle("-fx-alignment: center-right;");
             }
-
+            
             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
         }
     }

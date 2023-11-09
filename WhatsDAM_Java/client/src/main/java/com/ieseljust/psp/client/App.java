@@ -12,85 +12,101 @@ import com.ieseljust.psp.client.communications.*;
 
 public class App extends Application {
 
+    /*
+     * Classe de l'aplicació. Aquesta derivarà de
+     * la classe Application, per ser una aplicació JavaFX
+     * 
+     */
+
     public void init() {
-        // Init inicializa las variables de la aplicación.
-        // En principio, aquí no es necesario hacer nada.
+        // Init inicialitza les variables de l'aplicació
+        // En principi aci no cal fer res
+
     }
 
     @Override
     public void start(Stage stage) {
-        try {
-            // Características generales de la aplicación
 
-            // Archivo de vista
+        try {
+
+            // Caracteístiques generals de l'aplicació
+
+            // Fitxer de la vista
             String fxml = "mainLayout.fxml";
 
-            // Cargar la vista
+            // Carreguem la vista
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(fxml));
             Scene scene = new Scene(root);
 
-            // Establecer propiedades para la ventana (stage)
+            // Assignem propietats a l'stage (finestra)
             stage.setTitle("WhatsDAM");
             stage.setMaxHeight(600);
             stage.setMaxWidth(800);
             stage.setResizable(true);
 
-            // También podrías configurar el ícono de la aplicación aquí
-            // o agregar estilos personalizados.
+            // Aci també podriem establir la icona de l'aplicació
+            // o afegir estils personalitzats.
 
             var appIcon = new Image("icon.png");
             stage.getIcons().add(appIcon);
 
-            // Estilos personalizados
+            // Estils personalitzats
 
-            // Preparar la aplicación para que se cierre al cerrar la ventana
+            // Preparem l'aplicació per finalitzar-la
+            // quan es tanque la finestra
             stage.setOnCloseRequest(e -> {
                 Platform.exit();
                 System.exit(0);
             });
 
-            // Establecer la escena (vista) y mostrar la ventana (stage)
+            // Assignem l'escena (vista) i mostrem l'stage (finestra)
             stage.setScene(scene);
             stage.show();
 
             try {
-                // Lanzar un hilo dentro de la interfaz gráfica
-                // para actualizar periódicamente la lista de usuarios
+                // Llancem un fil dins la pròpia interfície gràfica
+                // Per actualitzar periòdicament la llista d'usuaris
 
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         Runnable updater = new Runnable() {
+
                             @Override
                             public void run() {
-                                // Actualizar periódicamente la lista de usuarios.
-                                // Recupérala del modelo y pásala a la interfaz de usuario.
+                                // Actualitzem periòdicament
+                                // la llista d'usuaris.
+                                // L'agafem del model i la passem a la UI
                                 mainLayoutController.updateUsuaris(ViewModel.getInstance().getLlistaUsuaris());
                                 mainLayoutController.updateMessages(ViewModel.getInstance().getPendingMessages());
+                                
+
                             }
                         };
 
-                        // Esto hace que se ejecute periódicamente.
-                        // Platform.runLater permite lanzar un hilo
-                        // dentro de la interfaz.
+                        // Amb açò fem que s'execute periòdicament
+                        // El Platform.runLater permet llançar un fil
+                        // dins la interfície
                         while (true) {
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException ex) {
                             }
 
-                            // La actualización de la interfaz de usuario se ejecuta en el hilo de la aplicación
+                            // UI update is run on the Application thread
                             Platform.runLater(updater);
                         }
                     }
+
                 });
-                // No permitir que el hilo evite que se cierre la JVM
+                // don't let thread prevent JVM shutdown
                 thread.setDaemon(true);
                 thread.start();
 
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -99,28 +115,39 @@ public class App extends Application {
     public static void main(String[] args) {
         CurrentConfig.init(args[0], args[1]);
 
-        // El ViewModel será un objeto compartido
+        // El ViewModel serà un objecte compartit
         ViewModel vm = new ViewModel();
 
-        // Lanzar el hilo para escuchar las emisiones del servidor
+        // Llancem el fil per escoltar els broadcasts del servidor
         serverListener sl = new serverListener(vm);
         new Thread(sl).start();
 
         try {
-            // CommunicationManager gestiona las conexiones al servidor,
-            // envía mensajes al servidor y gestiona las respuestas.
-            // Debemos esperar a que el puerto se establezca correctamente.
-            while (!CurrentConfig.connectionReady()) {
-                System.exit(Integer.parseInt("Configuración no está lista"));
+            // CommunicationManaget gestiona les connexions
+            // al servidor, per enviar-li missatges i gestionar
+            // les respostes. La informació que el servidor
+            // enviarà per broadcast es gestiona des del serverListener
+
+            //  Hem d'esperar a que s'establisca el port correctament
+            while (!CurrentConfig.connectionReady()){
+                System.out.println("Config not ready");
                 Thread.sleep(100);
             }
-            System.out.println("Configuración lista");
+            System.out.println("Config ready");
             communicationManager.connect();
 
-            // Iniciar el ciclo de vida de la aplicación gráfica
+            // Iniciem el cicle de vida
+            // de l'aplicació gràfica
+
             launch(args);
-        } catch (Exception e) {
+        } catch (communicationManagerException ex) {
+            System.err.println(ex.getMessage());
+            System.exit(0);
+        } catch(Exception e){
             e.printStackTrace();
         }
+        ;
+
     }
+
 }
