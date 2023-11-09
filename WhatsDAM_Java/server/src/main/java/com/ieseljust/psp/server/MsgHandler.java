@@ -132,6 +132,34 @@ class MsgHandler implements Runnable {
              *           en lloc de fer-ho tot al case. 
              * 
              */
+            InputStream is = MySocket.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String linia = br.readLine();
+
+            JSONObject MissatgeRebut = new JSONObject(linia);
+            String command = MissatgeRebut.getString("command");
+
+            JSONObject resposta;
+
+            switch (command) {
+                case "register":
+                    resposta = registerUser(MissatgeRebut);
+                    break;
+                case "newMessage":
+                    resposta = sendMessage(MissatgeRebut);
+
+                default:
+                    resposta = new JSONObject();
+                    resposta.put("status", "error");
+                    resposta.put("error", "Comanda desconeguda");
+                    break;
+            }
+
+            OutputStream os = MySocket.getOutputStream();
+            PrintWriter pw = new PrintWriter(os);
+            pw.println(resposta.toString());
+            pw.flush();
             
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

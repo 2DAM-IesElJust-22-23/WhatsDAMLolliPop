@@ -32,6 +32,26 @@ public class ServerMsg {
         // Quan arribe una connexió, haurem de crear un thread per atendre la petició
         // La classe que s'encarregarà d'atendre les peticions és MsgHandler
 
+        ServerSocket servSocLket = null;
+
+        try {
+            servSocLket = new ServerSocket(srvPort);
+            System.out.println("Server escoltant en el port " + srvPort);
+
+            while (true) {
+                Socket clientSocket = servSocLket.accept();
+                System.out.println("Nou client connectat: " + clientSocket.getInetAddress().getHostAddress());
+
+                Thread t = new Thread(new MsgHandler(clientSocket, Connexions));
+                t.start();
+            }
+        } catch (IOException e) {
+
+        } finally {
+            if (servSocLket != null) {
+                servSocLket.close();
+            }
+        }
     }
 
     public static void main(String[] args) throws IOException {
