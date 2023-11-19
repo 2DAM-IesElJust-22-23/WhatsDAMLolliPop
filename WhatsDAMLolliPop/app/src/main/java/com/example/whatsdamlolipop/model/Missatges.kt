@@ -1,30 +1,28 @@
-package com.example.whatsdamlolipop.model;
+package com.example.whatsdamlolipop.model
 
-/**
- * Objeto que representa una lista de mensajes.
- */
-object Missatges {
-         var llistaMissatges = mutableListOf<Missatge>()
+import androidx.lifecycle.MutableLiveData
 
-        /**
-         * Obtiene la lista de mensajes.
-         *
-         * @return La lista de mensajes.
-         */
-        fun getMissatges(): List<Missatge> = llistaMissatges
+class Missatges {
+    private val _missatges = MutableLiveData<ArrayList<Missatge>>().apply {
+        value = ArrayList()
+    }
 
-        /**
-         * Obtiene el número total de mensajes.
-         *
-         * @return El número total de mensajes.
-         */
-        fun getNumMissatges() = llistaMissatges.size
+    val missatges: MutableLiveData<ArrayList<Missatge>> = _missatges
 
-        /**
-         * Agrega un nuevo mensaje a la lista de mensajes.
-         *
-         * @param missatgeM El nuevo mensaje a agregar.
-         * @return `true` si el mensaje se agregó correctamente, `false` en caso contrario.
-         */
-        fun addMissatge(missatgeM: Missatge) = llistaMissatges.add(missatgeM)
+    fun getMessageAt(position: Int): Missatge? {
+        return _missatges.value?.get(position)
+    }
+
+    fun add(username: String, text: String) {
+        _missatges.value?.add(Missatge(username, text))
+        _missatges.postValue(_missatges.value)
+    }
+
+    fun sendMessage(message: Missatge) {
+        // Implementa la lógica para enviar el mensaje al servidor si es necesario.
+    }
+
+    fun size(): Int {
+        return _missatges.value?.size ?: 0
+    }
 }

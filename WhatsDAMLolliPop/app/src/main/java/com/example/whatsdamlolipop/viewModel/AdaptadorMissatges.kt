@@ -1,4 +1,5 @@
 package com.example.whatsdamlolipop.viewModel
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,14 +8,15 @@ import com.example.whatsdamlolipop.model.Missatge
 import com.example.whatsdamlolipop.repository.MissatgeRepository
 
 /**
- * Clase AdaptadorRecycler
+ * Clase AdaptadorMissatges
  *
  * Esta clase es un adaptador para el RecyclerView que maneja la lista de mensajes.
  * Se encarga de inflar las vistas de los elementos y vincular los datos con los ViewHolders.
  *
  * @param llistaMissatges La lista de mensajes que se mostrará en el RecyclerView.
  */
-class AdaptadorMissatges(var llistaMissatges: List<Missatge>) : RecyclerView.Adapter<MissatgeViewHolder>() {
+class AdaptadorMissatges : RecyclerView.Adapter<MissatgeViewHolder>() {
+
     /**
      * Crea un nuevo ViewHolder cuando se necesita.
      *
@@ -35,10 +37,8 @@ class AdaptadorMissatges(var llistaMissatges: List<Missatge>) : RecyclerView.Ada
      * @param position La posición del mensaje en la lista.
      */
     override fun onBindViewHolder(holder: MissatgeViewHolder, position: Int) {
-        (holder as MissatgeViewHolder).bind(
-            MissatgeRepository.getInstance().getLlistaMissatges()[position]
-        )
-
+        val message = MissatgeRepository.getInstance().getMessage(position)
+        message?.let { holder.bind(it) }
     }
 
     /**
@@ -47,6 +47,6 @@ class AdaptadorMissatges(var llistaMissatges: List<Missatge>) : RecyclerView.Ada
      * @return El número total de mensajes.
      */
     override fun getItemCount(): Int {
-        return MissatgeRepository.getInstance().getNumMissatges()
+        return MissatgeRepository.getInstance().getNumMessages()
     }
 }
